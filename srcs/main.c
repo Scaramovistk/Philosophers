@@ -6,7 +6,7 @@
 /*   By: gscarama <gscarama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 14:50:43 by gscarama          #+#    #+#             */
-/*   Updated: 2022/10/20 17:27:29 by gscarama         ###   ########.fr       */
+/*   Updated: 2022/10/20 17:50:10 by gscarama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,27 +18,28 @@ int	create_forks(t_mutex *forks, int n_philo)
 
 	forks = malloc(sizeof(t_mutex) * n_philo);
 	if (forks == NULL)
-		return ; //Print Error + Return Neg
+		return ; //Return Neg
 	row = 0;
 	while (row < n_philo)
 	{
 		if (pthread_mutex_init(&forks[row], NULL))
-			return ; //Print Error + Return Neg
+			return ; //Return Neg
 		row++;
 	}
 }
 
-void	create_table(t_data *dta)
+int	create_table(t_data *dta)
 {
 	int	row;
 
 	dta->philo = malloc(sizeof(t_philo) * dta->n_philo);
-	create_forks(dta->forks, dta->n_philo);
+	if (!create_forks(dta->forks, dta->n_philo) || !dta->philo)
+		return (-1); //Print Error + Return Neg
 	row = 0;
 	while (row < dta->n_philo)
 	{
-		//Init tread
-		pthread_create(&dta->philo[row].thread, NULL, &philo, &dta->philo[row]);
+		if (pthread_create(&dta->philo[row].thread, NULL, &philo, &dta->philo[row]))
+			return (-1);//Print Error + Return Neg
 		dta->philo[row].dta = dta;
 		dta->philo[row].pos = row + 1;
 		dta->philo[row].last_meal = 0;
@@ -51,7 +52,7 @@ void	create_table(t_data *dta)
 
 void	output(t_data *dta, t_philo *philo, int sig)
 {
-	int	time;
+	int	time; // Stated Time - current time
 
 	if (sig == 1)
 		printf("%dMs %d has taken a fork\n", time, philo->pos);
@@ -80,21 +81,20 @@ void	*philo(void *pt_philo)
 	philo = (t_philo *)pt_philo;
 	while (philo->dta->musteat > philo->eated) //Must eat < eated
 	{
-		int time; //Get time from comand execution
-		
+		int time; // Stated Time - current time
+
 		pthread_mutex_lock(philo->l_fork);
 		output(philo->dta, philo, 1);
 		pthread_mutex_lock(philo->r_fork);
 		output(philo->dta, philo, 1);
-		output(philo->dta, philo, 2);
 		//Start Eating
+		output(philo->dta, philo, 2);
 		//Finishi eating
 		pthread_mutex_unlock(philo->l_fork);
 		pthread_mutex_unlock(philo->r_fork);
 		//Start Sleeping (Delay)
 		//Start Thinking
-		//Check if is Dead
-		
+		//??? Check if is Dead ???
 	}
 }
 
@@ -140,14 +140,13 @@ int	check_and_init(t_data *dta, int ac, char **av)
 	}
 }
 
-int main(int ac, char **av)
+int	main(int ac, char **av)
 {
 	t_data	dta;
 
 	//Check All args se estao dentro do esperado
-	if (check_and_init(&dta, ac, **av))
+	if (check_and_init(&dta, ac, **av) && create_table(&dta))
 	{
-		create_table(&dta);
 		int	row;
 
 		row = 0;
@@ -157,10 +156,8 @@ int main(int ac, char **av)
 			row++;
 		}
 
-		//Data | philosofer possition
-
 		//Free Data
+		
 	}
-
 	return (0);
 }

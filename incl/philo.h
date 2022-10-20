@@ -6,7 +6,7 @@
 /*   By: gscarama <gscarama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 14:50:43 by gscarama          #+#    #+#             */
-/*   Updated: 2022/10/20 17:23:33 by gscarama         ###   ########.fr       */
+/*   Updated: 2022/10/20 17:43:20 by gscarama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <pthread.h>
+#include <unistd.h>
+#include <sys/time.h>
 
 typedef pthread_mutex_t t_mutex;
 
