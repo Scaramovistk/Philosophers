@@ -6,7 +6,7 @@
 /*   By: gscarama <gscarama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 14:50:43 by gscarama          #+#    #+#             */
-/*   Updated: 2022/10/20 17:43:20 by gscarama         ###   ########.fr       */
+/*   Updated: 2022/10/21 15:13:49 by gscarama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ typedef struct s_philo
 	pthread_t	thread;
 	t_mutex		*r_fork;
 	t_mutex		*l_fork;
-	t_data		*dta;
+	struct s_data	*dta;
 }	t_philo;
 
 typedef struct s_data
