@@ -6,7 +6,7 @@
 /*   By: gscarama <gscarama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 14:50:43 by gscarama          #+#    #+#             */
-/*   Updated: 2022/10/21 15:13:49 by gscarama         ###   ########.fr       */
+/*   Updated: 2022/10/21 16:26:50 by gscarama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,5 +44,12 @@ typedef struct s_data
 	int		t_started;
 	int		musteat;
 }	t_data;
+
+int		create_table(t_data *dta);
+int		check_and_init(t_data *dta, int ac, char **av);
+
+void	*philo(void *pt_philo);
+
+int		ft_error(void);
 
 #endif
