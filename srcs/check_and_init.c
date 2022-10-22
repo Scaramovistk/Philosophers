@@ -6,7 +6,7 @@
 /*   By: gscarama <gscarama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 16:23:57 by gscarama          #+#    #+#             */
-/*   Updated: 2022/10/21 16:33:52 by gscarama         ###   ########.fr       */
+/*   Updated: 2022/10/22 17:17:40 by gscarama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,8 @@ int	create_table(t_data *dta)
 			return (ft_error());
 		dta->philo[row].dta = dta;
 		dta->philo[row].pos = row + 1;
-		dta->philo[row].last_meal = 0;
+		dta->philo[row].last_meal.tv_sec = 0; //Menor ?
+		dta->philo[row].last_meal.tv_usec = 0;
 		dta->philo[row].eated = 0;
 		dta->philo[row].l_fork = &dta->forks[row];
 		dta->philo[row].r_fork = &dta->forks[(row + dta->n_philo - 1) % dta->n_philo];

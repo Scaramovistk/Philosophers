@@ -1,18 +1,20 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    makeFile                                           :+:      :+:    :+:    #
+#    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: gscarama <gscarama@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/06 16:53:26 by gscarama          #+#    #+#              #
-#    Updated: 2022/10/06 16:57:01 by gscarama         ###   ########.fr        #
+#    Updated: 2022/10/22 17:38:22 by gscarama         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= philo
 
-SOURCE	= main.c
+SOURCE	= main.c \
+		check_and_init.c \
+		utils.c
 
 CFLAGS	= -Wall -Wextra -Werror
 GCC	= gcc

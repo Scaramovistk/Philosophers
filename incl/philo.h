@@ -6,7 +6,7 @@
 /*   By: gscarama <gscarama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 14:50:43 by gscarama          #+#    #+#             */
-/*   Updated: 2022/10/21 16:26:50 by gscarama         ###   ########.fr       */
+/*   Updated: 2022/10/22 17:13:22 by gscarama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,12 @@ typedef pthread_mutex_t t_mutex;
 typedef struct s_philo
 {
 	int			pos;
-	int			last_meal;
 	int			eated;
 	pthread_t	thread;
 	t_mutex		*r_fork;
 	t_mutex		*l_fork;
 	struct s_data	*dta;
+	struct timeval	last_meal;
 }	t_philo;
 
 typedef struct s_data
@@ -41,12 +41,14 @@ typedef struct s_data
 	int		t_die;
 	int		t_eat;
 	int		t_sleep;
-	int		t_started;
 	int		musteat;
+	struct timeval	t_started;
 }	t_data;
 
 int		create_table(t_data *dta);
 int		check_and_init(t_data *dta, int ac, char **av);
+
+void	ft_msleep(long ms);
 
 void	*philo(void *pt_philo);
 
