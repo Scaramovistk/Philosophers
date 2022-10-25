@@ -6,7 +6,7 @@
 /*   By: gscarama <gscarama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 14:50:43 by gscarama          #+#    #+#             */
-/*   Updated: 2022/10/22 17:13:22 by gscarama         ###   ########.fr       */
+/*   Updated: 2022/10/25 18:13:21 by gscarama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ int		check_and_init(t_data *dta, int ac, char **av);
 
 void	ft_msleep(long ms);
 
+void	is_dead(t_data *dta, t_philo *philo);
+void	output(t_data *dta, t_philo *philo, int sig);
 void	*philo(void *pt_philo);
 
 int		ft_error(void);

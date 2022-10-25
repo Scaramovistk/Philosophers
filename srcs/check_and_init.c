@@ -6,7 +6,7 @@
 /*   By: gscarama <gscarama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 16:23:57 by gscarama          #+#    #+#             */
-/*   Updated: 2022/10/22 17:17:40 by gscarama         ###   ########.fr       */
+/*   Updated: 2022/10/25 17:57:37 by gscarama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,14 @@ int	check_and_init(t_data *dta, int ac, char **av)
 			}
 			read++;
 		}
-		dta->n_philo = ft_atoi(av[1]);//Number of philosopher
+		dta->n_philo = ft_atoi(av[1]);
 		if (dta->n_philo < 1)
 			return (ft_error());
-		dta->t_die = ft_atoi(av[2]);//Time to Die
-		dta->t_eat = ft_atoi(av[3]);//Time to eat
-		dta->t_sleep = ft_atoi(av[4]);//Time to sleep
+		dta->t_die = ft_atoi(av[2]);
+		dta->t_eat = ft_atoi(av[3]);
+		dta->t_sleep = ft_atoi(av[4]);
 		if (ac == 6)
-			dta->musteat = ft_atoi(av[5]);// Number of times each philosopher must eat
+			dta->musteat = ft_atoi(av[5]);
 		else
 			dta->musteat = 2147483647;
 	}
@@ -49,17 +49,17 @@ int	check_and_init(t_data *dta, int ac, char **av)
 	return (1);
 }
 
-int	create_forks(t_mutex *forks, int n_philo)
+int	create_forks(t_data *dta, int n_philo)
 {
 	int	row;
 
-	forks = malloc(sizeof(t_mutex) * n_philo);
-	if (forks == NULL)
+	dta->forks = malloc(sizeof(t_mutex) * n_philo);
+	if (!dta->forks)
 		return (-1);
 	row = 0;
 	while (row < n_philo)
 	{
-		if (pthread_mutex_init(&forks[row], NULL))
+		if (pthread_mutex_init(&dta->forks[row], NULL))
 			return (-1);
 		row++;
 	}
@@ -71,7 +71,7 @@ int	create_table(t_data *dta)
 	int	row;
 
 	dta->philo = malloc(sizeof(t_philo) * dta->n_philo);
-	if (!create_forks(dta->forks, dta->n_philo) || !dta->philo)
+	if (!create_forks(dta, dta->n_philo) || !dta->philo)
 		return (ft_error());
 	row = 0;
 	while (row < dta->n_philo)
@@ -80,11 +80,10 @@ int	create_table(t_data *dta)
 			return (ft_error());
 		dta->philo[row].dta = dta;
 		dta->philo[row].pos = row + 1;
-		dta->philo[row].last_meal.tv_sec = 0; //Menor ?
-		dta->philo[row].last_meal.tv_usec = 0;
 		dta->philo[row].eated = 0;
 		dta->philo[row].l_fork = &dta->forks[row];
 		dta->philo[row].r_fork = &dta->forks[(row + dta->n_philo - 1) % dta->n_philo];
+		gettimeofday(&dta->philo[row].last_meal, NULL);
 		//printf("Philosofer: %i, L_Fork: %i, R_Fork: %i\n", dta->philo[row].pos, row, ((row + dta->n_philo - 1) % dta->n_philo));
 		row++;
 	}
