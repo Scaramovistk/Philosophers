@@ -6,7 +6,7 @@
 /*   By: gscarama <gscarama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 14:50:43 by gscarama          #+#    #+#             */
-/*   Updated: 2022/10/25 18:28:06 by gscarama         ###   ########.fr       */
+/*   Updated: 2022/10/27 16:22:25 by gscarama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,9 @@
 
 void	output(t_data *dta, t_philo *philo, int sig)
 {
-	int		time;
-	struct	timeval now;
+	int	time;
 
-	gettimeofday(&now, NULL);
-	time = (now.tv_sec - dta->t_started.tv_sec) * 1000
-			+ (now.tv_usec - dta->t_started.tv_usec) / 1000;
+	time = diff_time(&dta->t_started);
 	if (sig == 1)
 		printf("%dMs %d has taken a fork\n", time, philo->pos);
 	else if (sig == 2)
@@ -32,7 +29,7 @@ void	output(t_data *dta, t_philo *philo, int sig)
 	else if (sig == 3)
 	{
 		printf("%dMs %d is sleeping\n", time, philo->pos);
-		ft_msleep(philo->dta->t_sleep);
+		ft_msleep(dta->t_sleep);
 	}
 	else if (sig == 4)
 		printf("%dMs %d is thinking\n", time, philo->pos);
@@ -40,70 +37,68 @@ void	output(t_data *dta, t_philo *philo, int sig)
 		printf("%dMs %d died\n", time, philo->pos);
 }
 
-void	is_dead(t_data *dta, t_philo *philo)
-{
-	int	time;
-	struct	timeval now;
-
-	gettimeofday(&now, NULL);
-	time = (now.tv_sec - dta->philo->last_meal.tv_sec) * 1000
-			+ (now.tv_usec - dta->philo->last_meal.tv_usec) / 1000;
-	if (time >= dta->t_die)
-	{
-		output(dta, philo, 5);
-		exit(-1); //Properly Exit
-	}
-}
-
 void	*philo(void *pt_philo)
 {
 	t_philo *philo;
 
 	philo = (t_philo *)pt_philo;
-	while (philo->dta->musteat > philo->eated)
+	if (philo->pos % 2 == 0)
+		usleep(200);
+	while (philo->eated < philo->dta->musteat)
 	{
-		is_dead(philo->dta, philo);
-		if (philo->pos % 2 == 0)
-			usleep(200); //Not a good solution
-
 		pthread_mutex_lock(philo->l_fork);
 		output(philo->dta, philo, 1);
 
 		pthread_mutex_lock(philo->r_fork);
 		output(philo->dta, philo, 1);
 
-		gettimeofday(&philo->last_meal, NULL);
 		output(philo->dta, philo, 2);
 
 		pthread_mutex_unlock(philo->l_fork);
 		pthread_mutex_unlock(philo->r_fork);
 
 		output(philo->dta, philo, 3);
-
-		output(philo->dta, philo, 4);
 		
-		is_dead(philo->dta, philo); //??? Check if is Dead ???
+		output(philo->dta, philo, 4);
 	}
 	return ((void *)-1);
+}
+
+int	free_threads(t_data *dta)
+{
+	int	row;
+	row = 0;
+	while (row < dta->n_philo)
+	{
+		pthread_mutex_destroy(&dta->forks[row]);
+		row++;
+	}
+	free(dta->philo);
+	free(dta->forks);
+	// free(dta->n_philo);
+	// free(dta->t_die);
+	// free(dta->t_eat);
+	// free(dta->t_sleep);
+	return (0);
 }
 
 int	main(int ac, char **av)
 {
 	t_data	dta;
+	int	row;
 
 	if (check_and_init(&dta, ac, av) && create_table(&dta))
 	{
-		int	row;
-
 		row = 0;
+		gettimeofday(&dta.t_started, NULL);
 		while (row < dta.n_philo)
-		{//Seg Fault
-			gettimeofday(&dta.t_started, NULL);
-			pthread_join(dta.philo[row].thread, NULL); //Take output para parar se morrer
+		{
+			pthread_join(dta.philo[row].thread, NULL);
 			row++;
 		}
-		//Free Data
-		
+		//Create a thread to monitorate the others ?
+		thread_monitor(&dta); //Not working paralel with the treads
+		free_threads(&dta);
 	}
 	return (0);
 }

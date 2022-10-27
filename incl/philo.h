@@ -6,7 +6,7 @@
 /*   By: gscarama <gscarama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 14:50:43 by gscarama          #+#    #+#             */
-/*   Updated: 2022/10/25 18:13:21 by gscarama         ###   ########.fr       */
+/*   Updated: 2022/10/27 15:35:03 by gscarama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef struct s_philo
 	t_mutex		*l_fork;
 	struct s_data	*dta;
 	struct timeval	last_meal;
+	//unsigned long last_meal;
 }	t_philo;
 
 typedef struct s_data
@@ -49,8 +50,9 @@ int		create_table(t_data *dta);
 int		check_and_init(t_data *dta, int ac, char **av);
 
 void	ft_msleep(long ms);
+int		diff_time(struct timeval *begin);
 
-void	is_dead(t_data *dta, t_philo *philo);
+int		is_dead(t_data *dta, t_philo *philo);
 void	output(t_data *dta, t_philo *philo, int sig);
 void	*philo(void *pt_philo);
 
