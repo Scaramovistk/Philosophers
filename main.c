@@ -72,7 +72,7 @@ void	*philo(void *pt_philo)
 
 	philo = (t_philo *)pt_philo;
 	if (philo->pos % 2 == 0)
-		usleep(200);
+		ft_msleep(philo->dta->t_eat * 0.9);
 	while (philo->dta->run == 1)
 	{
 		pthread_mutex_lock(philo->l_fork);
